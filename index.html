@@ -1,646 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Hub — Defence & Travel</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
+    :root {
+      --bg: #ffffff;
+      --bg2: #f7f7f5;
+      --bg3: #f0efe9;
+      --text: #1a1a1a;
+      --text2: #6b6b6b;
+      --text3: #a0a0a0;
+      --border: rgba(0,0,0,0.10);
+      --border2: rgba(0,0,0,0.18);
+      --radius: 10px;
+      --radius-lg: 14px;
+      --blue-bg: #E6F1FB;
+      --blue-text: #185FA5;
+      --green-bg: #E1F5EE;
+      --green-text: #0F6E56;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
 
-.app-shell {
-  display: flex;
-  height: 600px;
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  background: var(--color-background-primary);
-}
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --bg2: #2c2c2e;
+        --bg3: #3a3a3c;
+        --text: #f5f5f5;
+        --text2: #ababab;
+        --text3: #6e6e6e;
+        --border: rgba(255,255,255,0.10);
+        --border2: rgba(255,255,255,0.18);
+        --blue-bg: #0c2f52;
+        --blue-text: #7ab8f5;
+        --green-bg: #0b3024;
+        --green-text: #5ecfa4;
+        --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      }
+    }
 
-.sidebar {
-  width: 220px;
-  min-width: 220px;
-  background: var(--color-background-secondary);
-  border-right: 0.5px solid var(--color-border-tertiary);
-  display: flex;
-  flex-direction: column;
-  padding: 16px 12px;
-  gap: 6px;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg3);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
 
-.sidebar-logo {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  padding: 4px 8px 14px;
-  border-bottom: 0.5px solid var(--color-border-tertiary);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    .app {
+      display: flex;
+      width: 100%;
+      max-width: 960px;
+      height: 88vh;
+      max-height: 720px;
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--border-radius-md);
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  transition: background 0.15s;
-}
-.nav-item:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
-.nav-item.active { background: var(--color-background-primary); color: var(--color-text-primary); font-weight: 500; }
-.nav-item i { font-size: 16px; }
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 210px;
+      min-width: 210px;
+      background: var(--bg2);
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 10px;
+    }
 
-.sidebar-section {
-  font-size: 11px;
-  color: var(--color-text-tertiary);
-  padding: 10px 10px 4px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 4px 8px 14px;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .logo i { font-size: 20px; color: var(--blue-text); }
 
-.agent-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  margin-left: auto;
-}
-.badge-defence { background: #E6F1FB; color: #185FA5; }
-.badge-travel { background: #E1F5EE; color: #0F6E56; }
+    .section-label {
+      font-size: 10px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 10px 8px 4px;
+    }
 
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--text2);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.13s, color 0.13s;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--bg);
+      color: var(--text);
+    }
+    .nav-btn i { font-size: 16px; }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  border-bottom: 0.5px solid var(--color-border-tertiary);
-  background: var(--color-background-primary);
-}
+    .agent-pill {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-left: auto;
+      font-weight: 500;
+    }
+    .pill-blue { background: var(--blue-bg); color: var(--blue-text); }
+    .pill-green { background: var(--green-bg); color: var(--green-text); }
 
-.topbar-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 0.5px solid var(--border);
+    }
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text3);
+      padding: 4px 8px;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #1D9E75; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #1D9E75;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    /* ── Main area ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--bg);
+    }
 
-.webhook-url {
-  font-size: 11px;
-  color: var(--color-text-tertiary);
-  background: var(--color-background-secondary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-md);
-  padding: 4px 10px;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.webhook-url:hover { border-color: var(--color-border-secondary); }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 18px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .topbar-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .webhook-badge {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text3);
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: border-color 0.13s;
+    }
+    .webhook-badge:hover { border-color: var(--border2); color: var(--text2); }
 
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+    /* ── Messages ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 18px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
 
-.msg-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.msg-row.user { flex-direction: row-reverse; }
+    .msg-row { display: flex; gap: 9px; align-items: flex-start; }
+    .msg-row.user { flex-direction: row-reverse; }
 
-.avatar {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 500;
-}
-.avatar-bot { background: #E6F1FB; color: #185FA5; }
-.avatar-user { background: #E1F5EE; color: #0F6E56; }
+    .avatar {
+      width: 30px; height: 30px; min-width: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    .av-bot { background: var(--blue-bg); color: var(--blue-text); }
+    .av-user { background: var(--green-bg); color: var(--green-text); }
 
-.bubble {
-  max-width: 78%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--color-text-primary);
-}
-.bubble-bot {
-  background: var(--color-background-secondary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-top-left-radius: 4px;
-}
-.bubble-user {
-  background: #E1F5EE;
-  color: #04342C;
-  border-top-right-radius: 4px;
-}
+    .bubble {
+      max-width: 76%;
+      padding: 10px 14px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .bubble-bot {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: 0 14px 14px 14px;
+    }
+    .bubble-user {
+      background: var(--green-bg);
+      color: var(--green-text);
+      border-radius: 14px 0 14px 14px;
+    }
 
-.route-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  margin-bottom: 6px;
-}
-.route-defence { background: #E6F1FB; color: #185FA5; }
-.route-travel { background: #E1F5EE; color: #0F6E56; }
+    .route-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 7px;
+    }
+    .tag-defence { background: var(--blue-bg); color: var(--blue-text); }
+    .tag-travel  { background: var(--green-bg); color: var(--green-text); }
+    .tag-system  { background: var(--bg3); color: var(--text2); }
 
-.sources-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-.source-chip {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  border: 0.5px solid var(--color-border-tertiary);
-  color: var(--color-text-secondary);
-  background: var(--color-background-primary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  text-decoration: none;
-}
-.source-chip:hover { border-color: var(--color-border-secondary); color: var(--color-text-primary); }
+    .source-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 9px; }
+    .chip {
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      color: var(--text2);
+      background: var(--bg);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: border-color 0.13s;
+    }
+    .chip:hover { border-color: var(--border2); color: var(--text); }
 
-.typing-indicator {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  padding: 4px 0;
-}
-.typing-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--color-text-tertiary);
-  animation: bounce 1.2s infinite;
-}
-.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .typing { display: flex; gap: 4px; padding: 6px 2px; align-items: center; }
+    .td { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: tdBounce 1.1s infinite; }
+    .td:nth-child(2) { animation-delay: 0.18s; }
+    .td:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes tdBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
 
-.input-area {
-  padding: 12px 16px;
-  border-top: 0.5px solid var(--color-border-tertiary);
-  background: var(--color-background-primary);
-}
+    /* ── Input area ── */
+    .input-wrap {
+      padding: 10px 14px 12px;
+      border-top: 0.5px solid var(--border);
+    }
+    .chips-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 9px; }
+    .qchip {
+      font-size: 12px;
+      padding: 4px 11px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      color: var(--text2);
+      background: none;
+      cursor: pointer;
+      transition: all 0.13s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .qchip:hover { background: var(--bg2); color: var(--text); }
 
-.input-row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-}
+    .input-row { display: flex; gap: 8px; align-items: flex-end; }
+    textarea {
+      flex: 1;
+      background: var(--bg2);
+      border: 0.5px solid var(--border2);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      min-height: 38px;
+      max-height: 100px;
+      transition: border-color 0.13s, background 0.13s;
+    }
+    textarea:focus { border-color: var(--blue-text); background: var(--bg); }
+    textarea::placeholder { color: var(--text3); }
 
-.chat-input {
-  flex: 1;
-  border: 0.5px solid var(--color-border-secondary);
-  border-radius: 10px;
-  padding: 9px 14px;
-  font-size: 13px;
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  background: var(--color-background-secondary);
-  resize: none;
-  outline: none;
-  line-height: 1.5;
-  min-height: 38px;
-  max-height: 100px;
-}
-.chat-input:focus { border-color: var(--color-border-primary); background: var(--color-background-primary); }
-.chat-input::placeholder { color: var(--color-text-tertiary); }
+    .send-btn {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: var(--blue-text);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.13s, transform 0.1s;
+    }
+    .send-btn:hover { opacity: 0.88; }
+    .send-btn:active { transform: scale(0.95); }
+    .send-btn:disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; }
+    .send-btn i { font-size: 16px; }
 
-.send-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  border: none;
-  background: #185FA5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s, transform 0.1s;
-}
-.send-btn:hover { background: #0C447C; }
-.send-btn:active { transform: scale(0.95); }
-.send-btn:disabled { background: var(--color-background-secondary); color: var(--color-text-tertiary); cursor: not-allowed; }
-.send-btn i { font-size: 16px; }
+    /* ── Settings panel ── */
+    .settings-panel {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .settings-panel.open { display: flex; }
 
-.quick-chips {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-.quick-chip {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 0.5px solid var(--color-border-tertiary);
-  color: var(--color-text-secondary);
-  background: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.quick-chip:hover { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 12px; font-weight: 500; color: var(--text2); }
+    .field input {
+      border: 0.5px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: monospace;
+      color: var(--text);
+      background: var(--bg2);
+      outline: none;
+      transition: border-color 0.13s;
+    }
+    .field input:focus { border-color: var(--blue-text); background: var(--bg); }
 
-.config-panel {
-  display: none;
-  padding: 20px;
-  flex-direction: column;
-  gap: 14px;
-  overflow-y: auto;
-}
-.config-panel.visible { display: flex; }
+    .save-btn {
+      align-self: flex-start;
+      padding: 8px 18px;
+      border-radius: var(--radius);
+      border: 0.5px solid var(--border2);
+      background: var(--bg2);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.13s;
+    }
+    .save-btn:hover { background: var(--bg3); }
 
-.field-label {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-.field-input {
-  width: 100%;
-  border: 0.5px solid var(--color-border-secondary);
-  border-radius: var(--border-radius-md);
-  padding: 7px 10px;
-  font-size: 13px;
-  font-family: var(--font-mono);
-  color: var(--color-text-primary);
-  background: var(--color-background-secondary);
-  outline: none;
-}
-.field-input:focus { border-color: var(--color-border-primary); background: var(--color-background-primary); }
+    .info-card {
+      background: var(--bg2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .info-card strong { color: var(--text); }
 
-.save-btn {
-  padding: 8px 16px;
-  border-radius: var(--border-radius-md);
-  border: 0.5px solid var(--color-border-secondary);
-  background: var(--color-background-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  color: var(--color-text-primary);
-  align-self: flex-start;
-  transition: background 0.15s;
-}
-.save-btn:hover { background: var(--color-background-primary); }
+    .chat-view { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .chat-view.hidden { display: none; }
+  </style>
+</head>
+<body>
 
-.info-box {
-  background: var(--color-background-secondary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-md);
-  padding: 10px 12px;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-}
-</style>
+<div class="app">
 
-<h2 class="sr-only">Defence and Travel AI agent frontend — chat interface connected to n8n workflow</h2>
-
-<div class="app-shell">
+  <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-logo">
-      <i class="ti ti-robot" aria-hidden="true" style="font-size:18px; color:#185FA5;"></i>
+    <div class="logo">
+      <i class="ti ti-robot"></i>
       Agent Hub
     </div>
 
-    <div class="sidebar-section">Agents</div>
-
-    <button class="nav-item active" onclick="switchView('chat')" id="nav-chat">
-      <i class="ti ti-message-circle" aria-hidden="true"></i>
-      Chat
+    <div class="section-label">Navigation</div>
+    <button class="nav-btn active" id="btn-chat" onclick="showView('chat')">
+      <i class="ti ti-message-circle"></i> Chat
+    </button>
+    <button class="nav-btn" id="btn-settings" onclick="showView('settings')">
+      <i class="ti ti-settings"></i> Settings
     </button>
 
-    <button class="nav-item" onclick="switchView('config')" id="nav-config">
-      <i class="ti ti-settings" aria-hidden="true"></i>
-      Settings
-    </button>
-
-    <div class="sidebar-section" style="margin-top:12px;">Active Agents</div>
-
-    <div class="nav-item" style="cursor:default; pointer-events:none;">
-      <i class="ti ti-shield" aria-hidden="true" style="color:#185FA5;"></i>
+    <div class="section-label" style="margin-top:14px;">Active Agents</div>
+    <div class="nav-btn" style="cursor:default;pointer-events:none;">
+      <i class="ti ti-shield" style="color:var(--blue-text);"></i>
       Defence
-      <span class="agent-badge badge-defence">llama3</span>
+      <span class="agent-pill pill-blue">llama3</span>
     </div>
-
-    <div class="nav-item" style="cursor:default; pointer-events:none;">
-      <i class="ti ti-plane" aria-hidden="true" style="color:#0F6E56;"></i>
+    <div class="nav-btn" style="cursor:default;pointer-events:none;">
+      <i class="ti ti-plane" style="color:var(--green-text);"></i>
       Travel
-      <span class="agent-badge badge-travel">llama3</span>
+      <span class="agent-pill pill-green">llama3.2</span>
+    </div>
+    <div class="nav-btn" style="cursor:default;pointer-events:none;opacity:0.7;">
+      <i class="ti ti-cpu" style="color:var(--text3);"></i>
+      Orchestrator
+      <span class="agent-pill pill-blue">mistral</span>
     </div>
 
-    <div style="margin-top: auto; padding-top: 12px; border-top: 0.5px solid var(--color-border-tertiary);">
-      <div style="font-size:11px; color: var(--color-text-tertiary); padding: 4px 8px;">
-        <i class="ti ti-circle-filled" aria-hidden="true" style="font-size:8px; color:#1D9E75; margin-right:4px;"></i>
-        n8n connected
+    <div class="sidebar-footer">
+      <div class="status-line">
+        <div class="dot" id="status-dot"></div>
+        <span id="status-text">n8n ready</span>
       </div>
     </div>
   </div>
 
+  <!-- Main -->
   <div class="main">
     <div class="topbar">
       <div class="topbar-title">
-        <div class="status-dot"></div>
+        <div class="dot"></div>
         Multi-Agent Chat
       </div>
-      <div class="webhook-url" id="webhook-display" onclick="copyWebhook()">
-        <i class="ti ti-link" aria-hidden="true"></i>
-        <span id="webhook-short">localhost:5678/webhook/...</span>
-        <i class="ti ti-copy" aria-hidden="true"></i>
+      <div class="webhook-badge" onclick="copyWebhook()" title="Click to copy webhook URL">
+        <i class="ti ti-link"></i>
+        <span id="wh-label">localhost:5678/webhook/...</span>
+        <i class="ti ti-copy"></i>
       </div>
     </div>
 
-    <div id="chat-view" style="display:flex; flex-direction:column; flex:1; min-height:0;">
+    <!-- Chat view -->
+    <div class="chat-view" id="chat-view">
       <div class="messages" id="messages">
         <div class="msg-row">
-          <div class="avatar avatar-bot"><i class="ti ti-robot" aria-hidden="true" style="font-size:14px;"></i></div>
+          <div class="avatar av-bot"><i class="ti ti-robot" style="font-size:14px;"></i></div>
           <div class="bubble bubble-bot">
-            <div class="route-tag route-travel"><i class="ti ti-sparkles" aria-hidden="true" style="font-size:11px;"></i> System</div>
-            Hello! I'm your multi-agent assistant powered by Ollama + n8n.<br><br>
-            Ask me anything about <strong>defence & military</strong> or <strong>travel planning</strong> — I'll route you to the right specialist automatically.
-          </div>
+            <div class="route-tag tag-system"><i class="ti ti-sparkles" style="font-size:11px;"></i> System</div>Hello! I'm your multi-agent assistant powered by Ollama + n8n.
+
+Ask me anything about <strong>defence & military</strong> or get a full <strong>travel itinerary</strong> with live hotel &amp; flight data — I route automatically.</div>
         </div>
       </div>
 
-      <div class="input-area">
-        <div class="quick-chips">
-          <button class="quick-chip" onclick="sendQuick('Plan a 5-day trip to Tokyo')"><i class="ti ti-plane" aria-hidden="true"></i> Tokyo trip</button>
-          <button class="quick-chip" onclick="sendQuick('Tell me about the BrahMos missile')"><i class="ti ti-shield" aria-hidden="true"></i> BrahMos missile</button>
-          <button class="quick-chip" onclick="sendQuick('Best hotels in Goa under INR 5000')"><i class="ti ti-building" aria-hidden="true"></i> Goa hotels</button>
-          <button class="quick-chip" onclick="sendQuick('Compare F-35 vs Rafale fighter jet')"><i class="ti ti-arrows-exchange" aria-hidden="true"></i> F-35 vs Rafale</button>
+      <div class="input-wrap">
+        <div class="chips-row">
+          <button class="qchip" onclick="q('Plan a 5-day trip to Tokyo')"><i class="ti ti-plane"></i> Tokyo trip</button>
+          <button class="qchip" onclick="q('Tell me about the BrahMos missile')"><i class="ti ti-shield"></i> BrahMos</button>
+          <button class="qchip" onclick="q('Best hotels in Goa under INR 5000')"><i class="ti ti-building"></i> Goa hotels</button>
+          <button class="qchip" onclick="q('Compare F-35 vs Rafale fighter jet')"><i class="ti ti-arrows-exchange"></i> F-35 vs Rafale</button>
+          <button class="qchip" onclick="q('7 day itinerary for Switzerland')"><i class="ti ti-map"></i> Switzerland</button>
         </div>
         <div class="input-row">
-          <textarea class="chat-input" id="chat-input" placeholder="Ask about travel plans or defence systems..." rows="1"
-            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()" aria-label="Send message">
-            <i class="ti ti-send" aria-hidden="true"></i>
+          <textarea id="input" placeholder="Ask about travel or defence..." rows="1"
+            onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="send()" aria-label="Send">
+            <i class="ti ti-send"></i>
           </button>
         </div>
       </div>
     </div>
 
-    <div id="config-view" class="config-panel">
-      <div>
-        <div class="field-label">n8n Webhook URL</div>
-        <input class="field-input" id="webhook-input" type="text"
-          value="http://localhost:5678/webhook/defence-travel-live-webhook-001"
-          placeholder="http://localhost:5678/webhook/your-id" />
+    <!-- Settings view -->
+    <div class="settings-panel" id="settings-view">
+      <div class="field">
+        <label>n8n Webhook URL</label>
+        <input id="cfg-webhook" type="text"
+          value="http://localhost:5678/webhook/1f9c9faa-e37a-4b34-a26b-cbaf72a44d5f" />
       </div>
-      <div>
-        <div class="field-label">SerpAPI Key</div>
-        <input class="field-input" id="serp-input" type="password" placeholder="Enter your SerpAPI key..." />
+      <div class="field">
+        <label>SerpAPI Key</label>
+        <input id="cfg-serp" type="password"
+          placeholder="Your SerpAPI key (for Hotels, Flights, MakeMyTrip, TripAdvisor)" />
       </div>
-      <div>
-        <div class="field-label">RapidAPI Key (Booking.com)</div>
-        <input class="field-input" id="rapid-input" type="password" placeholder="Enter your RapidAPI key..." />
+      <div class="field">
+        <label>RapidAPI Key (Booking.com)</label>
+        <input id="cfg-rapid" type="password"
+          placeholder="Your RapidAPI key" />
       </div>
-      <div>
-        <div class="field-label">Ollama Base URL</div>
-        <input class="field-input" id="ollama-input" type="text" value="http://localhost:11434" />
+      <div class="field">
+        <label>Ollama Base URL</label>
+        <input id="cfg-ollama" type="text" value="http://localhost:11434" />
       </div>
-      <button class="save-btn" onclick="saveConfig()">
-        <i class="ti ti-device-floppy" aria-hidden="true"></i> Save settings
+      <button class="save-btn" onclick="saveSettings()">
+        <i class="ti ti-device-floppy"></i> Save & go to chat
       </button>
-      <div class="info-box">
+      <div class="info-card">
         <strong>How to connect:</strong><br>
         1. Import the workflow JSON into n8n<br>
-        2. Set the webhook URL above to match your n8n Chat Trigger URL<br>
-        3. Add your SerpAPI + RapidAPI keys<br>
-        4. Make sure Ollama is running on port 11434<br>
-        5. Click Save and start chatting
+        2. The webhook URL is pre-filled with your workflow's ID<br>
+        3. Activate the workflow in n8n (toggle top-right)<br>
+        4. Ensure Ollama is running: <code>ollama serve</code><br>
+        5. Models needed: <code>mistral</code> · <code>llama3</code> · <code>llama3.2</code><br><br>
+        <strong>Your webhook ID:</strong> <code>1f9c9faa-e37a-4b34-a26b-cbaf72a44d5f</code>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-let webhookURL = localStorage.getItem('n8n_webhook') || 'http://localhost:5678/webhook/defence-travel-live-webhook-001';
-let isWaiting = false;
+  const DEFAULT_WEBHOOK = 'http://localhost:5678/webhook/1f9c9faa-e37a-4b34-a26b-cbaf72a44d5f';
+  let webhookURL = localStorage.getItem('agent_webhook') || DEFAULT_WEBHOOK;
+  let busy = false;
 
-function updateWebhookDisplay() {
-  try {
-    const u = new URL(webhookURL);
-    document.getElementById('webhook-short').textContent = u.host + u.pathname.slice(0, 20) + '...';
-  } catch(e) {
-    document.getElementById('webhook-short').textContent = webhookURL.slice(0, 30) + '...';
+  function updateBadge() {
+    try {
+      const u = new URL(webhookURL);
+      document.getElementById('wh-label').textContent = u.host + u.pathname.slice(0,28) + '…';
+    } catch { document.getElementById('wh-label').textContent = webhookURL.slice(0,35) + '…'; }
+    document.getElementById('cfg-webhook').value = webhookURL;
   }
-}
-updateWebhookDisplay();
+  updateBadge();
 
-function switchView(view) {
-  document.getElementById('chat-view').style.display = view === 'chat' ? 'flex' : 'none';
-  document.getElementById('config-view').classList.toggle('visible', view === 'config');
-  document.getElementById('nav-chat').classList.toggle('active', view === 'chat');
-  document.getElementById('nav-config').classList.toggle('active', view === 'config');
-}
+  function copyWebhook() {
+    navigator.clipboard.writeText(webhookURL).catch(() => {});
+    const el = document.querySelector('.webhook-badge');
+    el.style.borderColor = 'var(--green-text)';
+    setTimeout(() => el.style.borderColor = '', 1200);
+  }
 
-function saveConfig() {
-  webhookURL = document.getElementById('webhook-input').value.trim() || webhookURL;
-  localStorage.setItem('n8n_webhook', webhookURL);
-  updateWebhookDisplay();
-  switchView('chat');
-  appendBotMessage('system', 'Settings saved. Webhook URL updated.');
-}
+  function showView(v) {
+    document.getElementById('chat-view').classList.toggle('hidden', v !== 'chat');
+    document.getElementById('settings-view').classList.toggle('open', v === 'settings');
+    document.getElementById('btn-chat').classList.toggle('active', v === 'chat');
+    document.getElementById('btn-settings').classList.toggle('active', v === 'settings');
+  }
 
-function copyWebhook() {
-  navigator.clipboard.writeText(webhookURL).catch(() => {});
-}
+  function saveSettings() {
+    const w = document.getElementById('cfg-webhook').value.trim();
+    if (w) { webhookURL = w; localStorage.setItem('agent_webhook', w); }
+    updateBadge();
+    showView('chat');
+    appendBot('system', 'Settings saved. Webhook URL updated to:\n' + webhookURL);
+  }
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
-}
+  function resize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  }
 
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
+  function onKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+  function q(text) { document.getElementById('input').value = text; send(); }
 
-function sendQuick(text) {
-  document.getElementById('chat-input').value = text;
-  sendMessage();
-}
+  function guessCategory(text) {
+    const l = text.toLowerCase();
+    const d = ['missile','jet','fighter','military','tank','weapon','navy','army','f-35','f-22','rafale','brahmos','nato','submarine','radar','tejas','eurofighter','warship','bomb','aircraft','defence','defense'];
+    const t = ['trip','travel','visit','hotel','flight','itinerary','vacation','tour','goa','tokyo','dubai','paris','manali','rajasthan','switzerland','book','package','destination','plan'];
+    return d.filter(w=>l.includes(w)).length > t.filter(w=>l.includes(w)).length ? 'defence' : 'travel';
+  }
 
-function detectCategory(text) {
-  const lower = text.toLowerCase();
-  const defenceWords = ['missile','jet','fighter','military','tank','weapon','navy','army','airforce','defence','defense','aircraft','warship','f-35','f-22','rafale','brahmos','nato','submarine','combat','radar','tejas','eurofighter'];
-  const travelWords = ['trip','travel','visit','hotel','flight','itinerary','vacation','tour','destination','plan','goa','tokyo','dubai','paris','manali','rajasthan','book','package'];
-  const dScore = defenceWords.filter(w => lower.includes(w)).length;
-  const tScore = travelWords.filter(w => lower.includes(w)).length;
-  return dScore > tScore ? 'defence' : 'travel';
-}
+  function scrollBottom() {
+    const m = document.getElementById('messages');
+    m.scrollTop = m.scrollHeight;
+  }
 
-function appendUserMessage(text) {
-  const msgs = document.getElementById('messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row user';
-  row.innerHTML = `
-    <div class="avatar avatar-user"><i class="ti ti-user" aria-hidden="true" style="font-size:14px;"></i></div>
-    <div class="bubble bubble-user">${escHtml(text)}</div>`;
-  msgs.appendChild(row);
-  msgs.scrollTop = msgs.scrollHeight;
-}
+  function appendUser(text) {
+    const msgs = document.getElementById('messages');
+    const row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = `
+      <div class="avatar av-user"><i class="ti ti-user" style="font-size:14px;"></i></div>
+      <div class="bubble bubble-user">${esc(text)}</div>`;
+    msgs.appendChild(row);
+    scrollBottom();
+  }
 
-function appendTyping() {
-  const msgs = document.getElementById('messages');
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  row.id = 'typing-row';
-  row.innerHTML = `
-    <div class="avatar avatar-bot"><i class="ti ti-robot" aria-hidden="true" style="font-size:14px;"></i></div>
-    <div class="bubble bubble-bot">
-      <div class="typing-indicator">
-        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
-      </div>
-    </div>`;
-  msgs.appendChild(row);
-  msgs.scrollTop = msgs.scrollHeight;
-}
+  function showTyping() {
+    const msgs = document.getElementById('messages');
+    const row = document.createElement('div');
+    row.className = 'msg-row'; row.id = 'typing';
+    row.innerHTML = `
+      <div class="avatar av-bot"><i class="ti ti-robot" style="font-size:14px;"></i></div>
+      <div class="bubble bubble-bot"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;
+    msgs.appendChild(row);
+    scrollBottom();
+  }
 
-function removeTyping() {
-  const t = document.getElementById('typing-row');
-  if (t) t.remove();
-}
+  function removeTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
 
-function appendBotMessage(category, text) {
-  const msgs = document.getElementById('messages');
-  const isDefence = category === 'defence';
-  const tagClass = isDefence ? 'route-defence' : 'route-travel';
-  const tagIcon = isDefence ? 'ti-shield' : 'ti-plane';
-  const tagLabel = isDefence ? 'Defence Agent' : category === 'system' ? 'System' : 'Travel Agent';
+  function appendBot(type, text, showSources) {
+    const msgs = document.getElementById('messages');
+    const isDefence = type === 'defence';
+    const tagClass = type === 'system' ? 'tag-system' : isDefence ? 'tag-defence' : 'tag-travel';
+    const icon = type === 'system' ? 'ti-sparkles' : isDefence ? 'ti-shield' : 'ti-plane';
+    const label = type === 'system' ? 'System' : isDefence ? 'Defence Agent' : 'Travel Agent';
 
-  const row = document.createElement('div');
-  row.className = 'msg-row';
+    const formatted = esc(text)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^#{1,3} (.+)$/gm, '<div style="font-weight:600;margin:8px 0 3px;">$1</div>')
+      .replace(/\n/g, '<br>');
 
-  let sourcesHtml = '';
-  if (category === 'travel') {
-    sourcesHtml = `
-      <div class="sources-row">
-        <a class="source-chip" href="https://www.makemytrip.com" target="_blank"><i class="ti ti-external-link" aria-hidden="true"></i> MakeMyTrip</a>
-        <a class="source-chip" href="https://www.booking.com" target="_blank"><i class="ti ti-external-link" aria-hidden="true"></i> Booking.com</a>
-        <a class="source-chip" href="https://www.tripadvisor.com" target="_blank"><i class="ti ti-external-link" aria-hidden="true"></i> TripAdvisor</a>
-        <a class="source-chip" href="https://www.skyscanner.co.in" target="_blank"><i class="ti ti-external-link" aria-hidden="true"></i> Skyscanner</a>
+    let sources = '';
+    if (showSources) {
+      sources = `<div class="source-chips">
+        <a class="chip" href="https://www.makemytrip.com" target="_blank"><i class="ti ti-external-link" style="font-size:11px;"></i> MakeMyTrip</a>
+        <a class="chip" href="https://www.booking.com" target="_blank"><i class="ti ti-external-link" style="font-size:11px;"></i> Booking.com</a>
+        <a class="chip" href="https://www.tripadvisor.com" target="_blank"><i class="ti ti-external-link" style="font-size:11px;"></i> TripAdvisor</a>
+        <a class="chip" href="https://www.skyscanner.co.in" target="_blank"><i class="ti ti-external-link" style="font-size:11px;"></i> Skyscanner</a>
       </div>`;
-  }
-
-  const formattedText = escHtml(text)
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/#{1,3} (.+)/g, '<div style="font-weight:500; margin: 6px 0 3px;">$1</div>')
-    .replace(/\n/g, '<br>');
-
-  row.innerHTML = `
-    <div class="avatar avatar-bot"><i class="ti ti-robot" aria-hidden="true" style="font-size:14px;"></i></div>
-    <div class="bubble bubble-bot">
-      <div class="route-tag ${tagClass}"><i class="ti ${tagIcon}" aria-hidden="true" style="font-size:11px;"></i> ${tagLabel}</div>
-      ${formattedText}
-      ${sourcesHtml}
-    </div>`;
-  msgs.appendChild(row);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-async function sendMessage() {
-  if (isWaiting) return;
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  input.style.height = 'auto';
-  appendUserMessage(text);
-
-  isWaiting = true;
-  document.getElementById('send-btn').disabled = true;
-  appendTyping();
-
-  const category = detectCategory(text);
-
-  try {
-    const res = await fetch(webhookURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatInput: text, sessionId: 'frontend-session-' + Date.now() })
-    });
-
-    removeTyping();
-
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-
-    const data = await res.json();
-    const reply = data.output || data.text || data.message || data.response || JSON.stringify(data);
-    appendBotMessage(category, reply);
-
-  } catch (err) {
-    removeTyping();
-    const isDemoMode = webhookURL.includes('localhost') || webhookURL.includes('127.0.0.1');
-    if (isDemoMode) {
-      const demoReplies = {
-        defence: `## 🛡️ Defence Intelligence Report\n**Query:** ${text}\n\n### Overview\nThis is a demo response. Connect your n8n webhook in Settings to get real Ollama-powered answers.\n\nYour Defence Agent (llama3) would provide detailed military specifications, operational context, and comparative analysis here.\n\n### Key Specifications\n- Connect n8n webhook to activate\n- Model: llama3 (temperature 0.3)\n- Specialized in military technology`,
-        travel: `## ✈️ Travel Plan\n**Query:** ${text}\n\n### Demo Mode\nThis is a preview. Connect your n8n webhook in Settings to get real travel plans with live data from:\n\n**Booking.com** • **MakeMyTrip** • **TripAdvisor** • **Google Flights**\n\nYour Travel Agent (llama3) would generate a full day-by-day itinerary with real hotel prices, package links, and flight options.`
-      };
-      appendBotMessage(category, demoReplies[category]);
-    } else {
-      appendBotMessage('system', `Connection error: ${err.message}\n\nCheck your webhook URL in Settings and make sure n8n is running.`);
     }
+
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
+      <div class="avatar av-bot"><i class="ti ti-robot" style="font-size:14px;"></i></div>
+      <div class="bubble bubble-bot">
+        <div class="route-tag ${tagClass}"><i class="ti ${icon}" style="font-size:11px;"></i> ${label}</div>
+        ${formatted}${sources}
+      </div>`;
+    msgs.appendChild(row);
+    scrollBottom();
   }
 
-  isWaiting = false;
-  document.getElementById('send-btn').disabled = false;
-  document.getElementById('chat-input').focus();
-}
+  function setStatus(text, ok = true) {
+    document.getElementById('status-text').textContent = text;
+    document.getElementById('status-dot').style.background = ok ? '#1D9E75' : '#E24B4A';
+  }
 
-document.getElementById('webhook-input').value = webhookURL;
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+  }
+
+  async function send() {
+    if (busy) return;
+    const inp = document.getElementById('input');
+    const text = inp.value.trim();
+    if (!text) return;
+    inp.value = ''; inp.style.height = 'auto';
+
+    appendUser(text);
+    const cat = guessCategory(text);
+    busy = true;
+    document.getElementById('send-btn').disabled = true;
+    showTyping();
+    setStatus('Thinking…');
+
+    try {
+      const res = await fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatInput: text, sessionId: 'session-' + Date.now() })
+      });
+
+      removeTyping();
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      const data = await res.json();
+      const reply = data.output || data.text || data.message || JSON.stringify(data);
+      const realCat = (data.category || cat).toLowerCase() === 'defence' ? 'defence' : 'travel';
+      appendBot(realCat, reply, realCat === 'travel');
+      setStatus('n8n ready');
+
+    } catch (err) {
+      removeTyping();
+      setStatus('Connection error', false);
+
+      // Demo fallback
+      const demos = {
+        defence: `## 🛡️ Defence Intelligence Report\n**Query:** ${text}\n\n### Demo Mode\nConnect your n8n webhook to get real Ollama-powered answers.\n\nYour Defence Agent (llama3) would provide:\n- Detailed specs and capabilities\n- Operational context\n- Country usage & comparisons\n\n**Error:** ${err.message}`,
+        travel: `## ✈️ Travel Plan\n**Query:** ${text}\n\n### Demo Mode\nConnect your n8n webhook to get real travel plans with live data from Booking.com, MakeMyTrip, TripAdvisor.\n\nYour Travel Agent (llama3.2) would generate:\n- Day-by-day itinerary\n- Live hotel prices in INR\n- Package links from MakeMyTrip\n- Flight options\n\n**Error:** ${err.message}`
+      };
+      appendBot(cat, demos[cat], cat === 'travel');
+    }
+
+    busy = false;
+    document.getElementById('send-btn').disabled = false;
+    document.getElementById('input').focus();
+  }
 </script>
+</body>
+</html>
